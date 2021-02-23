@@ -1,0 +1,20 @@
+{
+  "name": "TOSCA_Namespace_Sort",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "dependencies": {
+    "ansi-colors": "^4.1.1",
+    "chalk": "^4.1.0",
+    "data-store": "^4.0.3",
+    "enquirer": "^2.3.6",
+    "json-nested-find": "^1.0.6",
+    "xml2js": "^0.4.23"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
