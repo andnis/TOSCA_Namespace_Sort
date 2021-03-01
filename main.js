@@ -188,9 +188,7 @@ function findDependencies(definition, dependencies, implementations) {
                     }
                 }
             }
-        } else {
-        }
-
+        } else {}
 
     } else {
 
@@ -585,9 +583,9 @@ async function checkIfViable(auto) {
                                                 repository = await addRepositoryHandler()
                                             }
 
-                                            moveDefinition(selection.definition, repository)
+                                            moveDefinition(definition, repository)
                                         } catch (error) {
-                                            console.log("No Dependency was added")
+                                            console.log("No Dependency was moved")
                                         }
                                         break;
                                     default:
@@ -814,7 +812,6 @@ async function autoSortDefinitions(type) {
                                     }
                                 }
                             }
-
                         }
                     }
                 }
