@@ -85,6 +85,7 @@ function checkFile(file) {
                                 definitions[name].type = type
 
                                 definitions[name].namespace = result[definition]["$"].targetNamespace
+                                definitions[name].namespaceOriginal = result[definition]["$"].targetNamespace
 
                                 if (name == "Pet-Clinic-DA_w1" || name == "Mosquitto_3.1_1-w1-wip1" || name == "string") {
                                     console.log(definitions[name])
@@ -105,6 +106,7 @@ function checkFile(file) {
                                 definitions[name].type = type
 
                                 definitions[name].namespace = result[definition]["$"].targetNamespace
+                                definitions[name].namespaceOriginal = result[definition]["$"].targetNamespace
 
                                 if (name == "Pet-Clinic-DA_w1" || name == "Mosquitto_3.1_1-w1-wip1" || name == "string") {
                                     console.log(definitions[name])
@@ -345,7 +347,11 @@ function moveDefinition(def, repo) {
 
     repositories[repo].definitions.push(def)
 
-    definitions[def].namespace = repositories[repo].namespace + "/" + definitions[def].type.toLowerCase() + "s"
+    if (repo != "unsorted") {
+        definitions[def].namespace = repositories[repo].namespace + "/" + definitions[def].type.toLowerCase() + "s"
+    } else {
+        definitions[def].namespace = definitions[def].namespaceOriginal
+    }
 
     getRepositoryChoices()
 
@@ -758,6 +764,42 @@ function getServiceTemplates() {
     return serviceTemplates
 }
 
+function createDescriptionFile() {
+
+    var file = fs.createWriteStream('changes.txt', {
+        flags: 'w'
+      })
+
+    file.write("Needed Changes\n")
+    file.write("-----------------------------------\n")
+
+    for (const definition in definitions) {
+
+        if (definitions[definition].namespace != definitions[definition].namespaceOriginal) {
+
+            file.write("Name: " + definition + "\n")
+            file.write("Directory: " + definitions[definition].directory + "\n")
+            file.write("Original Namespace: " + definitions[definition].namespaceOriginal + "\n")
+            file.write("New Namespace: " + definitions[definition].namespace + "\n")
+
+            file.write("References:\n")
+
+            for (const def in definitions) {
+
+                const dependencies = findDependencies(def);
+                if (dependencies.has(definition)) {
+                    file.write("\n\tName: " + def + "\n")
+                    file.write("\tDirectory: " + definitions[def].directory + "\n")
+                }
+            }
+
+            file.write("-----------------------------------\n")
+        }
+    }
+
+    file.end()
+}
+
 async function autoSortDefinitions(type) {
 
     switch (type) {
@@ -1021,6 +1063,9 @@ async function main() {
             case "sort":
                 await sortRepositories()
                 break;
+            case "generate":
+                createDescriptionFile()
+                break
             case "move":
                 if (!input[1]) {
                     let defs = []
