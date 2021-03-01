@@ -78,6 +78,7 @@ function checkFile(file) {
                                 definitions[name] = {};
 
                                 definitions[name].dependencies = [];
+                                definitions[name].implementations = [];
 
                                 definitions[name].directory = directoryOfDefinition
 
@@ -96,6 +97,7 @@ function checkFile(file) {
                                 definitions[name] = {};
 
                                 definitions[name].dependencies = [];
+                                definitions[name].implementations = [];
                                 //definitions[name].dependent = [];
 
                                 definitions[name].directory = directoryOfDefinition
@@ -160,7 +162,7 @@ function checkFile(file) {
 }
 
 
-function findDependencies(definition, dependencies) {
+function findDependencies(definition, dependencies, implementations) {
 
     dependencies = dependencies || new Set();
 
@@ -169,6 +171,13 @@ function findDependencies(definition, dependencies) {
     if (definitions[definition]) {
 
         currentDef = definitions[definition].dependencies
+        if (implementations) {
+            if (definitions[definition].type === "NodeType") {
+                for (const impl of definitions[definition].implementations) {
+                    currentDef.push(impl)
+                }
+            }
+        }
 
         if (currentDef != undefined) {
             for (const dependency of currentDef) {
@@ -307,7 +316,7 @@ async function analyzeRepo() {
             for (const dependency of definitions[definition].dependencies) {
                 if (definitions[dependency]) {
                     if (definitions[dependency].type === "NodeType") {
-                        definitions[dependency].dependencies.push(definition)
+                        definitions[dependency].implementations.push(definition)
                     }
                 }
             }
@@ -794,7 +803,7 @@ async function autoSortDefinitions(type) {
 
                 for (const def in definitions) {
                     if (definitions[def].type === "ServiceTemplate") {
-                        const dependencies = findDependencies(def);
+                        const dependencies = findDependencies(def, new Set(), true);
                         if (dependencies.has(definition)) {
 
                             for (const repository in repositories) {
