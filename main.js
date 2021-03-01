@@ -856,7 +856,7 @@ async function main() {
 
     readAllData()
 
-    console.log(chalk.bold.bgBlue.black("gitSplit v0.0.1 - Type \"help\" for information on usage"))
+    console.log(chalk.bold.bgBlue.black("TOSCA Namespace Sort v0.0.1 - Type \"help\" for information on usage"))
 
     while (true) {
 
