@@ -768,9 +768,29 @@ function createDescriptionFile() {
 
     var file = fs.createWriteStream('changes.txt', {
         flags: 'w'
-      })
+    })
 
+    file.write("-----------------------------------\n")
+    file.write("-----------------------------------\n")
+    file.write("Namespace Dependencies\n")
+    file.write("-----------------------------------\n")
+    file.write("-----------------------------------\n")
+
+    for (const repo in repositories) {
+
+        file.write(repo + " is dependent on: \n")
+        for (const dep of repositories[repo].dependencies) {
+            file.write(dep + "\n")
+        }
+
+        file.write("-----------------------------------\n")
+
+    }
+
+    file.write("\n\n-----------------------------------\n")
+    file.write("-----------------------------------\n")
     file.write("Needed Changes\n")
+    file.write("-----------------------------------\n")
     file.write("-----------------------------------\n")
 
     for (const definition in definitions) {
@@ -796,6 +816,7 @@ function createDescriptionFile() {
             file.write("-----------------------------------\n")
         }
     }
+
 
     file.end()
 }
